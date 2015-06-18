@@ -17,6 +17,7 @@ import com.github.booknara.appcategory.adapter.AppListArrayAdapter;
 import com.github.booknara.appcategory.adapter.AppListItem;
 import com.github.booknara.appcategory.adapter.BaseAppArrayAdapter;
 import com.github.booknara.appcategory.adapter.Item;
+import com.github.booknara.appcategory.comparator.NamePackageComparator;
 import com.github.booknara.appcategory.util.ExceptionUtil;
 import com.github.booknara.appcategory.util.PackageUtil;
 import com.github.booknara.appcategory.util.StringUtil;
@@ -33,6 +34,8 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
@@ -40,6 +43,7 @@ public class MainActivity extends BaseActivity {
     private ArrayList<PackageVO> packages;
 
     protected BaseAppArrayAdapter mAppBaseArrayAdapter;
+    protected Comparator<PackageVO> comparator = NamePackageComparator.NAME_INSENSITIVE_COMPARATOR;
 
     private ListView mAppListView;
     private ProgressBar mProgressBar;
@@ -244,6 +248,9 @@ public class MainActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            if (comparator != null && packages != null && packages.size() > 1) {
+                Collections.sort(packages, comparator);
+            }
 
             mAppBaseArrayAdapter = new AppListArrayAdapter(ctx(), setListItem(packages));
             mAppListView.setAdapter(mAppBaseArrayAdapter);
