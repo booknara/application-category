@@ -1,8 +1,5 @@
 package com.github.booknara.appcategory.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
  * 
  * @author : Daehee Han(@daniel_booknara)

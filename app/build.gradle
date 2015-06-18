@@ -11,7 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField "String", "APP_NAME", "App Category"
+        buildConfigField "String", "APP_NAME", "\"AppCategory\""
     }
     buildTypes {
         release {

@@ -13,12 +13,25 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.github.booknara.appcategory.R;
+import com.github.booknara.appcategory.adapter.AppListArrayAdapter;
 import com.github.booknara.appcategory.adapter.AppListItem;
 import com.github.booknara.appcategory.adapter.BaseAppArrayAdapter;
 import com.github.booknara.appcategory.adapter.Item;
+import com.github.booknara.appcategory.util.ExceptionUtil;
 import com.github.booknara.appcategory.util.PackageUtil;
+import com.github.booknara.appcategory.util.StringUtil;
 import com.github.booknara.appcategory.vo.PackageVO;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,9 +87,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-
-
-
+        forceRefresh(false);
     }
 
     @Override
@@ -104,7 +115,7 @@ public class MainActivity extends BaseActivity {
     public void configureActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
     }
 
@@ -147,9 +158,9 @@ public class MainActivity extends BaseActivity {
     private List<Item> setListItem(List<PackageVO> packages) {
         List<Item> items = new ArrayList<>();
         for (PackageVO vo:packages) {
-            if (vo.systemApp) {
-                continue;
-            }
+//            if (vo.systemApp) {
+//                continue;
+//            }
 
             items.add(new AppListItem(this, vo));
         }
@@ -158,6 +169,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private class ReloadPackageTask extends AsyncTask<String, Void, String> {
+
+        private static final String API_URL = "http://getdatafor.appspot.com/data";
         private boolean pullToRefresh;
         public ReloadPackageTask(boolean pullToRefresh) {
             this.pullToRefresh = pullToRefresh;
@@ -165,13 +178,66 @@ public class MainActivity extends BaseActivity {
 
         @Override
         protected String doInBackground(String... args) {
-            if (packages.size() != 0 )
-                packages.clear();
-
             // 1. Getting device applications
             packages = ((ArrayList<PackageVO>) PackageUtil.getLaunchableApps(ctx(), true));
 
             // 2. Getting applications' category
+            JSONObject obj = new JSONObject();
+
+            JSONArray list = new JSONArray();
+            for(PackageVO iVo: packages) {
+                if (!StringUtil.isEmpty(iVo.pname))
+                    list.put(iVo.pname);
+            }
+
+            try {
+                obj.put("packages", list);
+            } catch (JSONException e) {
+                ExceptionUtil.exception(e);
+            }
+
+
+            HttpClient httpClient = new DefaultHttpClient(); //Deprecated
+            try {
+                HttpPost httpPost = new HttpPost(API_URL);
+                httpPost.setHeader("Content-type", "application/json");
+                StringEntity params = new StringEntity(obj.toString());
+                httpPost.setEntity(params);
+
+                HttpResponse lResp = httpClient.execute(httpPost);
+
+
+                ByteArrayOutputStream lBOS = new ByteArrayOutputStream();
+                String lInfoStr = null;
+                JSONObject categoryResponse = null;
+
+                lResp.getEntity().writeTo(lBOS);
+                lInfoStr = lBOS.toString("UTF-8");
+                categoryResponse = new JSONObject(lInfoStr);
+
+                JSONArray appArr = categoryResponse.getJSONArray("apps");
+                for(int i=0; i<appArr.length(); i++){
+                    JSONObject appObj = appArr.getJSONObject(i);
+                    String packageVal = appObj.optString("package", null);
+                    String categoryVal = appObj.optString("category", null);
+
+                    if(packageVal == null || categoryVal == null)
+                        continue;
+
+                    for(PackageVO iVo: packages) {
+                        if (packageVal.equalsIgnoreCase(iVo.pname)) {
+                            iVo.category = categoryVal;
+                        }
+
+                    }
+                }
+
+            } catch (Exception e) {
+                ExceptionUtil.exception(e);
+            } finally {
+                httpClient.getConnectionManager().shutdown();
+            }
+
 
             return null;
         }
@@ -179,7 +245,8 @@ public class MainActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String result) {
 
-            mAppBaseArrayAdapter.replaceAll(setListItem(packages));
+            mAppBaseArrayAdapter = new AppListArrayAdapter(ctx(), setListItem(packages));
+            mAppListView.setAdapter(mAppBaseArrayAdapter);
             if (pullToRefresh) {
                 mAppListView.setVisibility(View.VISIBLE);
                 mSwipeRefreshLayout.setRefreshing(false);
