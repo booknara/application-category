@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AppCategory</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Label -->
+    <string name="lbl_no_package_name">No package name</string>
+</resources>

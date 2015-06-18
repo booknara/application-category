@@ -1,0 +1,1 @@
+This project provides to get applications' category based on Google Play Store.

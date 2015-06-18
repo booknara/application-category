@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/list_header_bg"
+    android:minHeight="@dimen/list_card_header_min_height" >
+
+    <include
+        android:id="@+id/app_section_name_textview"
+        layout="@android:layout/preference_category"/>
+
+</RelativeLayout>
