@@ -19,7 +19,7 @@ import com.github.booknara.appcategory.vo.PackageVO;
  * Created by Daehee Han on 4/22/14.
  */
 public class AppListItem implements Item {
-    private static final String CNAME = AppListItem.class.getSimpleName();
+    private static final String TAG = AppListItem.class.getSimpleName();
     private Context context;
     public PackageVO vo;
 

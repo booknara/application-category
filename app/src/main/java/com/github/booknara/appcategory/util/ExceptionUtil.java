@@ -4,11 +4,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class ExceptionUtil {
-	// Suppress default constructor for noninstantiability
-    private ExceptionUtil() { }    // This constructor will never be invoked
+    private static final String TAG = ExceptionUtil.class.getSimpleName();
+    private ExceptionUtil() { }
     
-	static final String CNAME = ExceptionUtil.class.getSimpleName();
-	
 	/**
 	 * Get exception call stack information
 	 * 

@@ -8,7 +8,7 @@ import java.util.Comparator;
 
 
 public class NamePackageComparator extends AbstractPackageComparator implements Serializable {
-    private static final String CNAME = NamePackageComparator.class.getSimpleName();
+    private static final String TAG = NamePackageComparator.class.getSimpleName();
 
     /** Case-sensitive name comparator instance  */
     public static final Comparator<PackageVO> NAME_COMPARATOR = new NamePackageComparator();

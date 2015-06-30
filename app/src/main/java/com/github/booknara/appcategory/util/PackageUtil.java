@@ -29,14 +29,14 @@ import java.util.List;
 /**
  * Package information utility class
  * 
- * @author : Daniel Han(@daniel_booknara)
+ * @author : Daehee Han(@daniel_booknara)
  * @version : 1.0.0
  */
 public class PackageUtil {
-	// Suppress default constructor for noninstantiability
-    private PackageUtil() { }    // This constructor will never be invoked
+    private static String TAG = PackageUtil.class.getSimpleName();
+
+    private PackageUtil() { }
     
-	static String CNAME = PackageUtil.class.getSimpleName();
 	static String version = "1.0.0";
 	static String selfPackage;
 	
@@ -47,7 +47,7 @@ public class PackageUtil {
 		try {
 			return ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
 		} catch (NameNotFoundException e) {
-			Logger.e(CNAME, ExceptionUtil.exception(e));
+			Logger.e(TAG, ExceptionUtil.exception(e));
 		}	
 	
 		return version;
@@ -57,7 +57,7 @@ public class PackageUtil {
 		try {
 			ctx.getPackageManager().getPackageInfo(pkgName, PackageManager.GET_ACTIVITIES);
 		} catch (NameNotFoundException e) {
-			Logger.e(CNAME, ExceptionUtil.exception(e));
+			Logger.e(TAG, ExceptionUtil.exception(e));
 
 			return false;
 		}
@@ -72,7 +72,7 @@ public class PackageUtil {
 		try {
 			return ctx.getPackageManager().getApplicationIcon(packageName);
 		} catch (NameNotFoundException e) {
-			Logger.e(CNAME, ExceptionUtil.exception(e));
+			Logger.e(TAG, ExceptionUtil.exception(e));
 		}	
 	
 		return null;
@@ -115,7 +115,7 @@ public class PackageUtil {
 //	}
 	
 	public static boolean openPackageName(Context context, String packageName) {
-		Log.d(CNAME, "Open Package Name : " + packageName);
+		Log.d(TAG, "Open Package Name : " + packageName);
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
         if (intent == null)
             return false;
@@ -222,7 +222,7 @@ public class PackageUtil {
             try {
                 newInfo.appname = (String)ctx.getPackageManager().getApplicationLabel(ctx.getPackageManager().getApplicationInfo(p.activityInfo.packageName, PackageManager.GET_UNINSTALLED_PACKAGES));
             } catch (NameNotFoundException e) {
-                Log.e(CNAME, "NameNotFoundException");
+                Log.e(TAG, "NameNotFoundException");
                 CharSequence label = p.activityInfo.loadLabel(ctx.getPackageManager());
                 if (StringUtil.isEmpty(label)) {
                     newInfo.appname = "";
@@ -275,7 +275,7 @@ public class PackageUtil {
         try {
             newInfo.appname = (String)ctx.getPackageManager().getApplicationLabel(ctx.getPackageManager().getApplicationInfo(p.packageName, PackageManager.GET_UNINSTALLED_PACKAGES));
         } catch (NameNotFoundException e) {
-            Log.e(CNAME, "NameNotFoundException");
+            Log.e(TAG, "NameNotFoundException");
             newInfo.appname = p.applicationInfo.loadLabel(ctx.getPackageManager()).toString();
         }
 
@@ -425,7 +425,7 @@ public class PackageUtil {
     public static boolean killApplicationProcess(Context ctx, String packageName) {
         int pidToKill = getPid(ctx, packageName);
 
-        Log.i(CNAME, "killProcess(" + pidToKill + ")");
+        Log.i(TAG, "killProcess(" + pidToKill + ")");
 
         try {
             Thread.sleep(1100); //give Launcher a time to get foreground after activateLauncherApplication() call above
@@ -450,15 +450,15 @@ public class PackageUtil {
             }
 
             for (RunningAppProcessInfo runningAppProcessInfo : runningAppProcesses) {
-//                Log.i(CNAME, "Trying to kill app " + runningAppProcessInfo.processName);
+//                Log.i(TAG, "Trying to kill app " + runningAppProcessInfo.processName);
                 if (runningAppProcessInfo.pid == pidToKill) {
 
-                    Log.i(CNAME, "Trying to kill app " + runningAppProcessInfo.processName + ", importance = " + runningAppProcessInfo.importance);
+                    Log.i(TAG, "Trying to kill app " + runningAppProcessInfo.processName + ", importance = " + runningAppProcessInfo.importance);
 
                     List<RunningAppProcessInfo> oldProcesses = manager.getRunningAppProcesses();
                     int oldAppsCount = oldProcesses == null ? 0 : oldProcesses.size(); //TODO: simplify
 
-                    Log.d(CNAME, "runningAppsCount BEFORE: " + oldAppsCount);
+                    Log.d(TAG, "runningAppsCount BEFORE: " + oldAppsCount);
 
                     manager.killBackgroundProcesses(packageName);
 
@@ -469,11 +469,11 @@ public class PackageUtil {
                     android.os.Process.sendSignal(pidToKill, android.os.Process.SIGNAL_KILL);
 
                     int newAppsCount = manager.getRunningAppProcesses().size();
-                    Log.d(CNAME, "runningAppsCount AFTER: " + newAppsCount);
+                    Log.d(TAG, "runningAppsCount AFTER: " + newAppsCount);
 
                     if (newAppsCount != oldAppsCount) {
 
-                        Log.d(CNAME, "Killed application: " + packageName);
+                        Log.d(TAG, "Killed application: " + packageName);
                         killed = true;
 
 //                                    if(messageToShow != null) {
@@ -509,16 +509,16 @@ public class PackageUtil {
             try {
                 method = manager.getClass().getMethod("restartPackage", new Class[] { String.class });
             } catch (NoSuchMethodException ee) {
-                Log.e(CNAME, ExceptionUtil.exception(ee));
+                Log.e(TAG, ExceptionUtil.exception(ee));
                 return false;
             }
         }
 
         try {
             method.invoke(manager, packageName);
-            Log.i(CNAME, "kill method  " + method.getName()+ " invoked " + packageName);
+            Log.i(TAG, "kill method  " + method.getName()+ " invoked " + packageName);
         } catch (Exception e) {
-            Log.e(CNAME, ExceptionUtil.exception(e));
+            Log.e(TAG, ExceptionUtil.exception(e));
             return false;
         }
 
@@ -527,7 +527,7 @@ public class PackageUtil {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
-            Log.e(CNAME, ExceptionUtil.exception(e));
+            Log.e(TAG, ExceptionUtil.exception(e));
         }
 
         return isProcessRunning(context, packageName);

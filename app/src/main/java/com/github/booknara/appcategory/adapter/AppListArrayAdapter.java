@@ -12,7 +12,7 @@ import java.util.List;
 
 
 public class AppListArrayAdapter extends BaseAppArrayAdapter {
-	private static final String CNAME = AppListArrayAdapter.class.getSimpleName();
+	private static final String TAG = AppListArrayAdapter.class.getSimpleName();
 	
 	public AppListArrayAdapter(Context context, List<Item> packages) {
 		super(context, packages);
@@ -24,7 +24,7 @@ public class AppListArrayAdapter extends BaseAppArrayAdapter {
             convertView = mPackages.get(position).getView(mInflater, convertView, this, position);
 		} catch(Exception e) {
 			if(BuildConfig.DEBUG)
-				Logger.e(CNAME, ExceptionUtil.exception(e));
+				Logger.e(TAG, ExceptionUtil.exception(e));
 		}
         
         return convertView;

@@ -6,10 +6,10 @@ package com.github.booknara.appcategory.util;
  * @version : 1.0.0
  */
 public class StringUtil {
+    private static final String TAG = StringUtil.class.getSimpleName();
+
     private StringUtil() { }
     
-	static final String CNAME = StringUtil.class.getSimpleName();
-	
 	/**
 	 * Check string is null or empty
 	 * @param str

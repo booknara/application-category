@@ -6,7 +6,7 @@ import android.widget.Toast;
 import com.github.booknara.appcategory.BuildConfig;
 
 public class ToastFactory {
-	static String CNAME = ToastFactory.class.getSimpleName();
+	private static String TAG = ToastFactory.class.getSimpleName();
 
 	/**
 	 * show short time
@@ -22,7 +22,7 @@ public class ToastFactory {
 			Toast.makeText(c, c.getString(resId), Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
 			if (BuildConfig.DEBUG)
-				Logger.e(CNAME, ExceptionUtil.exception(e));
+				Logger.e(TAG, ExceptionUtil.exception(e));
 		}
 	}
 
@@ -40,7 +40,7 @@ public class ToastFactory {
 			Toast.makeText(c, message, Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
 			if (BuildConfig.DEBUG)
-				Logger.e(CNAME, ExceptionUtil.exception(e));
+				Logger.e(TAG, ExceptionUtil.exception(e));
 		}
 	}
 
@@ -58,7 +58,7 @@ public class ToastFactory {
 			Toast.makeText(c, c.getString(resId), Toast.LENGTH_LONG).show();
 		} catch (Exception e) {
 			if (BuildConfig.DEBUG)
-				Logger.e(CNAME, ExceptionUtil.exception(e));
+				Logger.e(TAG, ExceptionUtil.exception(e));
 		}
 	}
 	
@@ -76,7 +76,7 @@ public class ToastFactory {
 			Toast.makeText(c, message, Toast.LENGTH_LONG).show();
 		} catch (Exception e) {
 			if (BuildConfig.DEBUG)
-				Logger.e(CNAME, ExceptionUtil.exception(e));
+				Logger.e(TAG, ExceptionUtil.exception(e));
 		}
 	}
 

@@ -23,11 +23,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class BitmapUtil {
-	private static final String CNAME = BitmapUtil.class.getSimpleName();
+	private static final String TAG = BitmapUtil.class.getSimpleName();
 	
-	// Suppress default constructor for noninstantiability
-    private BitmapUtil() { }    // This constructor will never be invoked
-	
+    private BitmapUtil() { }
 
 	public static Bitmap getResizedBitmap(Bitmap image, int bitmapWidth, int bitmapHeight) {
 		return Bitmap.createScaledBitmap(image, bitmapWidth, bitmapHeight, true);
@@ -67,10 +65,10 @@ public class BitmapUtil {
 		    return b;	    	
 	    } catch (NullPointerException e) {
 			if (BuildConfig.DEBUG)
-				Logger.e(CNAME, ExceptionUtil.exception(e));
+				Logger.e(TAG, ExceptionUtil.exception(e));
 	    } catch (OutOfMemoryError o) {
 			if (BuildConfig.DEBUG)
-				Logger.e(CNAME, "OutOfMemoryError : "+ o.toString());
+				Logger.e(TAG, "OutOfMemoryError : "+ o.toString());
 			
 			System.gc();
 	    }

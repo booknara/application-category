@@ -13,10 +13,8 @@ import com.github.booknara.appcategory.BuildConfig;
  *
  */
 public class Logger {
+    private static String TAG = BuildConfig.APP_NAME;
     private Logger() { }
-    
-	static final String CNAME = Logger.class.getSimpleName();
-	static String TAG = BuildConfig.APP_NAME;
 
 	// debug
 	public static void d(String className, String msg) {

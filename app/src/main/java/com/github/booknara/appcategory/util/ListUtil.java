@@ -12,15 +12,14 @@ import java.util.Set;
 /**
  * List
  *
- * @author Daniel Han (@daniel_booknara)
+ * @author Daehee Han (@daniel_booknara)
  * @since 2014/05/06
  * @version 1.0.0
  *
  */
 public class ListUtil {
-    private ListUtil() { }    // This constructor will never be invoked
-    
-	private static final String CNAME = ListUtil.class.getSimpleName();
+    private static final String TAG = ListUtil.class.getSimpleName();
+    private ListUtil() { }
 
     public static List<PackageVO> removeDuplicates(List<PackageVO> list) {
         Set set = new HashSet();
